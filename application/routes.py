@@ -1,12 +1,26 @@
 from application import app, db
 from application.models import Tasks
+from application.forms import TaskForm
+from flask import render_template, request, redirect, url_for
 
-@app.route("/tasks/add/<name>")
-def add(name):
-    new_task = Tasks(name=name)
-    db.session.add(new_task)
-    db.session.commit()
-    return f"Added {new_task.id} to the list"
+@app.route("/tasks/home")
+@app.route("/tasks/")
+@app.route("/")
+def home():
+    all_tasks = Tasks.query.all()
+    return render_template('index.html', title="Home Page", all_tasks=all_tasks)
+
+@app.route("/tasks/add", methods=["GET", "POST"])
+def add():
+    form = TaskForm()
+
+    if request.method == "POST":
+        new_task = Tasks(name=form.name.data)
+        db.session.add(new_task)
+        db.session.commit()
+        return redirect(url_for("home"))
+
+    return render_template("create_task.html", title="Add new Task", form=form)
 
 @app.route("/tasks/showall")
 def read():
@@ -26,12 +40,12 @@ def total_tasks():
     all_tasks = Tasks.query.all()
     return f"You have total of {len(all_tasks)} tasks to do."
 
-@app.route("/tasks/update/<int:id>/<name>")
-def update(id, name):
+@app.route("/tasks/update/<int:id>/<new_name>")
+def update_task(id, new_name):
     tasks = Tasks.query.get(id)
-    tasks.name = name
+    tasks.name = new_name
     db.session.commit()
-    return f"Updated task {name} to new {tasks.name}"
+    return f"Updated task {id} to new {new_name}"
 
 @app.route("/tasks/delete/<int:id>")
 def delete(id):
@@ -41,7 +55,7 @@ def delete(id):
     return f"Task {id} has been deleted"
 
 @app.route('/tasks/completed/<int:id>')
-def complete_task(id):
+def completed_task(id):
     task = Tasks.query.get(id)
     task.completed = True
     db.session.commit()
