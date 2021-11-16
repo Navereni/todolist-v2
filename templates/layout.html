@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>To Do App - {{ title }}</title>
+    </head>
+    <body>
+        <h2>To Do App - {{ title }}</h2>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('add') }}">Add Task</a>
+        <br>
+        {% block body %}
+        {% endblock body %}
+    </body>
+</html>
