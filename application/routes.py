@@ -40,12 +40,19 @@ def total_tasks():
     all_tasks = Tasks.query.all()
     return f"You have total of {len(all_tasks)} tasks to do."
 
-@app.route("/tasks/update/<int:id>/<new_name>")
-def update_task(id, new_name):
-    tasks = Tasks.query.get(id)
-    tasks.name = new_name
-    db.session.commit()
-    return f"Updated task {id} to new {new_name}"
+@app.route("/tasks/update/<int:id>", methods=['GET', 'POST'])
+def update_task(id):
+
+    form = TaskForm()
+
+    task = Tasks.query.get(id)
+
+    if request.method == "POST":
+        task.name = form.name.data
+        db.session.commit()
+        return redirect(url_for("home"))
+
+    return render_template("update_task.html", task=task, form=form)
 
 @app.route("/tasks/delete/<int:id>")
 def delete(id):
