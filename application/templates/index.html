@@ -5,11 +5,13 @@
 <h2> Still to be Done! </h2>
     {% for task in all_tasks %} 
     {% if task.completed == False %}
-    <p>
-        Task ID: {{ task.id }}<br>
-        Task Name: {{ task.name }}<br>
-    <p>
-        {% endif %}
+        <p>
+            Task ID: {{ task.id }}<br>
+            Task Name: {{ task.name }}<br>
+            <a href="{{ url_for('update_task', id=task.id) }}">Edit</a>
+            <a href="{{ url_for('delete', id=task.id) }}">Delete</a>
+        <p>
+    {% endif %}
     {% endfor %}
 
 
@@ -19,6 +21,8 @@
     <p>
         Task ID: {{ task.id }}<br>
         Task Name: {{ task.name }}<br>
+        <a href="{{ url_for('update_task', id=task.id) }}">Edit</a>
+        <a href="{{ url_for('delete', id=task.id) }}">Delete</a>
         <p>
     {% endif %}
     {% endfor %}
