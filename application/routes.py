@@ -59,7 +59,7 @@ def delete(id):
     tasks = Tasks.query.get(id)
     db.session.delete(tasks)
     db.session.commit()
-    return f"Task {id} has been deleted"
+    return redirect(url_for("home"))
 
 @app.route('/tasks/completed/<int:id>')
 def completed_task(id):
