@@ -8,7 +8,7 @@ from flask import render_template, request, redirect, url_for
 @app.route("/")
 def home():
     all_tasks = Tasks.query.all()
-    return render_template('index.html', title="Home Page", all_tasks=all_tasks)
+    return render_template("index.html", title="Home Page", all_tasks=all_tasks)
 
 @app.route("/tasks/add", methods=["GET", "POST"])
 def add():
