@@ -66,11 +66,11 @@ def completed_task(id):
     task = Tasks.query.get(id)
     task.completed = True
     db.session.commit()
-    return f"Task {id} has been completed"
+    return redirect(url_for("home"))
 
 @app.route('/tasks/incompleted/<int:id>')
 def incomplete_task(id):
     task = Tasks.query.get(id)
     task.completed = False
     db.session.commit()
-    return f"Task {id} is still not completed"
+    return redirect(url_for("home"))
