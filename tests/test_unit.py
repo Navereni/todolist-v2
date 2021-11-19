@@ -3,6 +3,7 @@ from application import app
 from os import getenv
 from flask import url_for
 from application import app, db
+from application.models import Tasks
 
 class TestBase(TestCase):
 
@@ -18,6 +19,9 @@ class TestBase(TestCase):
     def setUp(self):
         # Will be called before every test
         db.create_all()
+        db.session.add(Tasks(name="Run unit test"))
+        db.session.commit()
+
 
     def tearDown(self):
         # Will be called after every test
@@ -57,3 +61,22 @@ class TestViews(TestBase):
     # def test_incomplete_task_get(self):
     #     response = self.client.get(url_for('incompleted'))
     #     self.assert200(response)
+
+
+class TestRead(TestBase):
+    def test_read_home_tasks(self):
+        response = self.client.get(url_for('home'))
+        self.assertIn(b'Run unit test', response.data)
+
+    def test_read_tasks_dictionary(self):
+        response = self.client.get(url_for('read'))
+        self.assertIn(b'Run unit test', response.data)
+
+class TestCreate(TestBase):
+    def test_create_task(self):
+        response = self.client.post(
+            url_for('add'),
+            data={"name": "Testing create function"}, 
+            follow_redirects=True
+        )
+        self.assertIn(b"Testing create function", response.data)
